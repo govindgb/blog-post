@@ -1,0 +1,14 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.ant-card-meta-title{
+    cursor: pointer;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+}
