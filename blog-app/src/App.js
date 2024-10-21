@@ -36,22 +36,17 @@ const App = () => {
       image: 'https://placeimg.com/600/400/animals',
     },
   ]);
+  const addBlog = (newBlog) => {
+    setBlogs([...blogs, { ...newBlog, id: blogs.length + 1 }]);
+  };
 
 
   return (
     <Router>
       <div className="flex justify-center items-center flex-col min-h-screen bg-gray-100 py-10">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Home blogs={blogs} />
-            }
-          />
-          <Route
-            path="/posts/:id"
-            element={<BlogDetail blogs={blogs} />}
-          />
+          <Route path="/" element={<Home blogs={blogs} addBlog={addBlog} />} />
+          <Route path="/posts/:id" element={<BlogDetail blogs={blogs} />} />
         </Routes>
       </div>
     </Router>
