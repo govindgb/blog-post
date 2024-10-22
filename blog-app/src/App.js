@@ -8,9 +8,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([
     {
       id: 1,
-      title: 'How to Learn React',
+      title: 'Pinaca Technologies Overview',
       excerpt: 'This guide will take you through the basics of React step-by-step...',
-      content: 'Full blog post content for How to Learn React',
+      content: 'Founded in 2019 and based in Pune, India, Pinaca Technologies is an innovative startup operating within the fintech sector. The company specializes in B2B payments, aiming to simplify and streamline financial transactions between businesses. By focusing on enhancing the efficiency of payment processes, Pinaca Technologies is dedicated to helping businesses manage their financial operations more effectively. The company leverages cutting-edge technology to provide solutions that cater to the unique needs of modern businesses in a rapidly evolving financial landscape.​',
       image: 'https://via.placeholder.com/600x400?text=React+Blog+1',
     },
     {
@@ -32,7 +32,7 @@ const App = () => {
       title: 'Understanding Node.js',
       excerpt: 'Node.js is a powerful runtime environment for building server-side applications...',
       content: 'Full blog post content for Understanding Node.js',
-      image: 'https://placeimg.com/600/400/animals',
+      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5S_veyC3KeLmrwVQE5WIhw8SXZxpz-Zh0Uw&s ',
     },
   ]);
   const addBlog = (newBlog) => {

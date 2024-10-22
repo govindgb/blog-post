@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Upload, message } from 'antd';
-import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
   const [form] = Form.useForm();
@@ -14,7 +14,7 @@ const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
       const values = await form.validateFields();
 
       // If there's an image file, upload it
-      let uploadedImageUrl = imageUrl; // Default to current preview URL
+      let uploadedImageUrl = ''; // Default to empty string if no image uploaded
 
       if (imageFile) {
         const formData = new FormData();
@@ -58,7 +58,7 @@ const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
   return (
     <Modal
       title="Add New Blog Post"
-      open={isVisible} // Updated to use `open` instead of `visible`
+      open={isVisible}
       onCancel={handleClose}
       onOk={handleSubmit}
       okText="Add Post"
@@ -71,7 +71,13 @@ const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
         >
           <Input placeholder="Enter blog title" />
         </Form.Item>
-
+        <Form.Item
+          name="excerpt"
+          label="Excerpt"
+          rules={[{ required: true, message: 'Please enter the excerpt' }]}
+        >
+          <Input placeholder="Enter blog excerpt" />
+        </Form.Item>
         <Form.Item
           name="content"
           label="Content"

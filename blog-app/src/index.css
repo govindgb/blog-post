@@ -4,11 +4,3 @@
 @tailwind utilities;
 
 
-.ant-card-meta-title{
-    cursor: pointer;
-}
-
-.container{
-    display: flex;
-    flex-direction: row;
-}
