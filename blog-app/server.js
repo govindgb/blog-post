@@ -1,65 +1,47 @@
 const express = require('express');
-const http = require('http');
 const multer = require('multer');
 const path = require('path');
-const { Server } = require('socket.io');
+const cors = require('cors');
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
 
-app.use(express.json());
+// Enable CORS for all routes
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow requests from this origin
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
-// Setup Multer for file uploads
+// Define storage for the images
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Store images in the 'uploads' folder
-  },
+  destination: './public/uploads/',
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Use timestamp as file name
-  }
-});
-const upload = multer({ storage });
-
-// Store blogs and comments in memory for simplicity
-let blogs = [];
-let commentsData = {};
-
-// API route to handle blog post creation with image
-app.post('/api/blogs', upload.single('image'), (req, res) => {
-  const { title, content } = req.body;
-  const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-  const newBlog = {
-    id: blogs.length + 1,
-    title,
-    content,
-    image: imageUrl,  // Store image URL in the blog post
-  };
-
-  blogs.push(newBlog);
-  res.status(201).json(newBlog);
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
 });
 
-// Serve the uploads folder as static files so we can access images
-app.use('/uploads', express.static('uploads'));
+// Initialize upload with the defined storage
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // 1MB file size limit
+}).single('image');
 
-// Serve the app
-server.listen(4000, () => {
-  console.log('Listening on port 4000');
-});
+// Serve static files (for uploaded images)
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
-// Socket.io handling (same as before)
-io.on('connection', (socket) => {
-  console.log('A user connected');
+// API route to handle image upload
+app.post('/upload', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Image upload failed', error: err });
+    }
 
-  socket.on('new-comment', (data) => {
-    const { postId, comment } = data;
-    if (!commentsData[postId]) commentsData[postId] = [];
-    commentsData[postId].push(comment);
-    io.emit('comments-updated', { postId, comments: commentsData[postId] });
+    // Return the uploaded image URL
+    const imageUrl = `http://localhost:4000/uploads/${req.file.filename}`;
+    return res.status(200).json({ imageUrl });
   });
+});
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
+const PORT = 4000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

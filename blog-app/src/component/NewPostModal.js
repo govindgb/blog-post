@@ -1,34 +1,64 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Input, Upload } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Upload, message } from 'antd';
+import { PlusOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
   const [form] = Form.useForm();
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState(null); // For image preview
+  const [imageFile, setImageFile] = useState(null); // Store image file
 
-  const handleSubmit = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        form.resetFields();
-        handleAddPost({ ...values, image: imageUrl });
-        handleClose();
-      })
-      .catch((info) => {
-        console.log('Validation Failed:', info);
-      });
+  // Submit handler to validate form, upload image, and add post
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      // If there's an image file, upload it
+      let uploadedImageUrl = imageUrl; // Default to current preview URL
+
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile); // Attach the image file to the form
+
+        // Upload image to the backend
+        const res = await axios.post('http://localhost:4000/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        uploadedImageUrl = res.data.imageUrl; // Get uploaded image URL from response
+      }
+
+      // Create post with the uploaded image URL and other form data
+      const newPost = { ...values, image: uploadedImageUrl };
+      handleAddPost(newPost); // Call parent handler to add the post
+
+      form.resetFields(); // Clear form fields
+      setImageUrl(null); // Reset image preview
+      setImageFile(null); // Reset image file
+      handleClose(); // Close modal after submission
+    } catch (error) {
+      console.log('Error during submission:', error);
+      message.error('Failed to submit the post. Please check your inputs.');
+    }
   };
 
-  const handleImageUpload = (info) => {
-    if (info.file.status === 'done') {
-      setImageUrl(URL.createObjectURL(info.file.originFileObj));
-    }
+  // Image upload handler to manage file and preview
+  const handleImageUpload = ({ file }) => {
+    setImageFile(file); // Store the image file
+    const previewUrl = URL.createObjectURL(file); // Create a local preview URL
+    setImageUrl(previewUrl); // Set image preview
+  };
+
+  // Remove image handler
+  const handleRemoveImage = () => {
+    setImageUrl(null);
+    setImageFile(null);
   };
 
   return (
     <Modal
       title="Add New Blog Post"
-      visible={isVisible}
+      open={isVisible} // Updated to use `open` instead of `visible`
       onCancel={handleClose}
       onOk={handleSubmit}
       okText="Add Post"
@@ -41,6 +71,7 @@ const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
         >
           <Input placeholder="Enter blog title" />
         </Form.Item>
+
         <Form.Item
           name="content"
           label="Content"
@@ -48,15 +79,30 @@ const NewPostModal = ({ isVisible, handleClose, handleAddPost }) => {
         >
           <Input.TextArea placeholder="Enter blog content" rows={4} />
         </Form.Item>
+
         <Form.Item label="Upload Image">
           <Upload
             listType="picture-card"
             showUploadList={false}
             beforeUpload={() => false} // Prevent automatic upload
-            onChange={handleImageUpload}
+            onChange={(info) => handleImageUpload(info)}
           >
             {imageUrl ? (
-              <img src={imageUrl} alt="blog" style={{ width: '100%' }} />
+              <div style={{ position: 'relative' }}>
+                <img src={imageUrl} alt="blog" style={{ width: '100%' }} />
+                {/* Add cut button to remove image */}
+                <CloseCircleOutlined
+                  style={{
+                    position: 'absolute',
+                    top: 5,
+                    right: 5,
+                    fontSize: 20,
+                    color: 'red',
+                    cursor: 'pointer',
+                  }}
+                  onClick={handleRemoveImage}
+                />
+              </div>
             ) : (
               <div>
                 <PlusOutlined />

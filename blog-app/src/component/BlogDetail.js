@@ -8,6 +8,12 @@ const socket = io('http://localhost:4000'); // Connect to the Socket.IO server
 const BlogDetail = ({ blogs }) => {
   const { id } = useParams();
   const blog = blogs.find((b) => b.id === parseInt(id));
+
+  // Check if the blog is found
+  if (!blog) {
+    return <h2>Blog not found</h2>;
+  }
+
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
 
@@ -43,16 +49,14 @@ const BlogDetail = ({ blogs }) => {
     setComment('');
   };
 
-  if (!blog) {
-    return <h2>Blog not found</h2>;
-  }
-
   return (
     <div className="flex justify-center items-center flex-col min-h-screen bg-gray-100 py-10">
       <h1 className="text-4xl font-bold mb-4">{blog.title}</h1>
+
+      {/* Render the image if it exists */}
       {blog.image && (
         <img
-          src={`http://localhost:4000${blog.image}`} // Display uploaded image
+          src={`${blog.image}`} // Display uploaded image
           alt={blog.title}
           className="w-full max-w-4xl mb-6 object-cover rounded-lg shadow-lg"
         />
@@ -90,6 +94,6 @@ const BlogDetail = ({ blogs }) => {
       </div>
     </div>
   );
-}
+};
 
 export default BlogDetail;
