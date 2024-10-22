@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Card from './CardComponent';
+import Card from './component/CardComponent';
 import NewPostModal from './component/NewPostModal'; // Import the modal component
 import { Pagination } from 'antd'; // Import Ant Design Pagination component
 

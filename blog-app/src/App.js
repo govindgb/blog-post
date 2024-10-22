@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Home_Page';
-import Card from './CardComponent';
 import BlogDetail from './component/BlogDetail';
 import './index.css';
 
