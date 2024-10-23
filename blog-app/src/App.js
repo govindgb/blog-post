@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './Home_Page';
 import BlogDetail from './component/BlogDetail';
+import pinacaImg from './assests/images/pinaca.jpg'
+import pinacaCompiditors from './assests/images/compi.jpg'
+
 import './index.css';
 
 const App = () => {
@@ -11,14 +14,14 @@ const App = () => {
       title: 'Pinaca Technologies Overview',
       excerpt: 'This guide will take you through the basics of React step-by-step...',
       content: 'Founded in 2019 and based in Pune, India, Pinaca Technologies is an innovative startup operating within the fintech sector. The company specializes in B2B payments, aiming to simplify and streamline financial transactions between businesses. By focusing on enhancing the efficiency of payment processes, Pinaca Technologies is dedicated to helping businesses manage their financial operations more effectively. The company leverages cutting-edge technology to provide solutions that cater to the unique needs of modern businesses in a rapidly evolving financial landscape.​',
-      image: 'https://via.placeholder.com/600x400?text=React+Blog+1',
+      image: pinacaImg,
     },
     {
       id: 2,
-      title: 'Understanding JavaScript Promises',
-      excerpt: 'Promises are an essential feature of JavaScript that enable asynchronous programming...',
-      content: 'Full blog post content for Understanding JavaScript Promises',
-      image: 'https://via.placeholder.com/600x400?text=JavaScript+Promises',
+      title: 'Pinaka Technology',
+      excerpt: 'Pinaka Technology can surpass competitors in the defense sector...',
+      content: 'Pinaka Technology faces competition from various companies in the defense and aerospace sectors, including major players like Bharat Electronics, Hindustan Aeronautics Limited (HAL), and others involved in defense manufacturing and technology solutions. These competitors have established reputations and extensive portfolios that encompass everything from avionics systems to ground support equipment. For instance, Bharat Electronics focuses on electronic products for defense applications, while HAL specializes in aircraft manufacturing and services, giving them a significant market presence and influence in India’s defense landscape',
+      image: pinacaCompiditors,
     },
     {
       id: 3,
